@@ -1,0 +1,49 @@
+#%RAML 1.0
+title: Product API for MySQL DB
+baseUri: http://localhost/{version}
+version: v1
+mediaType: [application/json, application/xml]
+securedBy: [passthrough]
+securitySchemes: 
+  passthrough: !include /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/pass-through-security-scheme/1.0.0/pass-through-security-scheme.raml
+
+description: Exposes Products from the MySQL Database
+
+uses: 
+  product: /exchange_modules/4ff02cd7-9e08-481b-890b-15ff7467b894/product-library/1.0.11/product-library.raml
+  collectionRT: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/collection-library/1.0.27/collection-library.raml
+
+/products:
+  displayName: Products
+  type:  
+    collectionRT.collection:
+      mediaType: application/json
+      collectionExample: !include exchange_modules/4ff02cd7-9e08-481b-890b-15ff7467b894/product-library/1.0.11/examples/collection.raml
+      collectionResponseExample: !include exchange_modules/4ff02cd7-9e08-481b-890b-15ff7467b894/product-library/1.0.11/examples/collectionResponse.raml
+  get:
+    description: Retrieve all the Products.
+    queryParameters: 
+      productName?: 
+        minLength: 3
+        displayName: Product Name
+      customerId?:
+        displayName: Customer Id
+        minLength: 3
+      category?:
+        displayName: Product Category
+        minLength: 3
+  post:
+  /{id}:
+    displayName: Product ID
+    description: Get Product by ID
+    type: 
+      collectionRT.member:
+        mediaType: application/json
+        memberExample: !include exchange_modules/4ff02cd7-9e08-481b-890b-15ff7467b894/product-library/1.0.11/examples/member.raml
+    uriParameters: 
+      id:
+        example: "1"
+        default: "1"
+    get:
+    put:
+    delete:

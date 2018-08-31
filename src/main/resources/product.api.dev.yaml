@@ -1,0 +1,4 @@
+mysql:
+  host: "mysql.shared.demos.mulesoft.com"
+  port: "3306"
+  schema: "1platform-products"
