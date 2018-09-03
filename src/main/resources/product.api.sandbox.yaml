@@ -1,3 +1,10 @@
+https:
+  port: "8082"
+
+keystore:
+  path: "docker01.domain.local.jks"
+  password: "Welcome1"
+
 mysql:
   host: "mysql.shared.demos.mulesoft.com"
   port: "3306"

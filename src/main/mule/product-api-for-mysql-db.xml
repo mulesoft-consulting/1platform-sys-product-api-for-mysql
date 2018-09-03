@@ -127,7 +127,7 @@ output application/json
                 <ee:set-variable variableName="id"><![CDATA[attributes.uriParams.id]]></ee:set-variable>
             </ee:variables>
         </ee:transform>
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="f7c0ee2b-1603-4ebb-a080-afa8b64c7784">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -436,7 +436,27 @@ output application/json
         </ee:transform>
     </flow>
     <flow name="post:\products:application\json:product-api-for-mysql-db-config">
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+        <ee:transform doc:name="Transform Message" doc:id="fcf3fc2a-5bf1-4feb-b6ee-09ea8c012750" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	description: payload01.description,
+	name: payload01.name,
+	id: payload01.id,
+	images: payload01.characteristics.images.href joinBy(","),
+	max_discount: payload01.pricing.maxDiscountPct
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<db:bulk-insert doc:name="Bulk insert" doc:id="80d9d386-098a-4cc8-91b6-1530d179d4aa" config-ref="Database_Config">
+			<db:sql >INSERT INTO Products ( id, name, description, product_number, manufactured, days_to_manufacture, list_price, standard_cost, max_discount, colors, categories, images, size, size_unit_measure_code, weight_unit_measure_code, weight, modified_date, created_date )
+VALUES ( 
+	:id, :name, :description, :product_number, :manufactured, :days_to_manufacture, :list_price, :standard_cost, :max_discount, :colors, :categories, :images, :size,  :size_unit_measure_code, :weight_unit_measure_code, :weight, :modified_date, :created_date
+ )</db:sql>
+		</db:bulk-insert>
+		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="1454da9e-390b-4e2b-86fb-5aece1359d94">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
