@@ -343,7 +343,8 @@ var product = payload[0]
         </ee:transform>
 			</when>
 			<otherwise >
-				<set-variable value="404" doc:name="Set Variable" doc:id="f08a1fdd-d184-401b-adf0-6f859b3d48cf" variableName="http.status"/>
+				<set-variable value="404" doc:name="Set Variable" doc:id="f08a1fdd-d184-401b-adf0-6f859b3d48cf" variableName="httpStatus"/>
+				<set-payload value='{  "message": "Product not found" }' doc:name="Set Payload" doc:id="2496a1ca-07da-4193-8013-f990bba9f68f" />
 			</otherwise>
 		</choice>
     </flow>
