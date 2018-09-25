@@ -1,0 +1,44 @@
+#%RAML 1.0 Library
+uses: 
+  product: /exchange_modules/4ff02cd7-9e08-481b-890b-15ff7467b894/product-library/1.0.11/product-library.raml
+  modifiedBy:  /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/modified-by-library/1.0.4/modified-by-library.raml
+  collection: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/collection-library/1.0.27/collection-library.raml
+  links: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/hypermedia-library/1.0.4/hypermedia-library.raml
+ 
+types:
+  Inventory:
+    properties: 
+      sourceSystem?: 
+      location: 
+      quantity:
+        properties: 
+          onHand?: number
+          reserved?: number
+          available?: number
+          minimumOrderPoint?: number
+          minimumOrderQuantity: number
+      dates:
+        properties: 
+          expectedArrival?:  date-only
+          lastReceived?:  date-only
+      modifiedDate?: modifiedBy.modified
+      createdDate?: modifiedBy.modified
+      link?: links.Link
+
+  ProductInventory:
+    properties:
+      productDetails?: product.Product
+      inventoryDetails?: Inventory[]
+    example: !include examples/member.raml
+  
+  ProductInventoryCollection:
+    type:  ProductInventory[]
+    example: !include examples/collection.raml
+ 
+  ProductInventoryCollectionResponse:
+    type: collection.CollectionResponse
+    properties:
+      productInventory: 
+        type: ProductInventory[]
+        required: false
+    example: !include examples/collectionResponse.raml

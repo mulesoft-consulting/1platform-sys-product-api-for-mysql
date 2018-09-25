@@ -8,6 +8,8 @@ keystore:
 mysql:
   host: 
   port: 
+  user:
+  password:
   schema: 
 
 api:

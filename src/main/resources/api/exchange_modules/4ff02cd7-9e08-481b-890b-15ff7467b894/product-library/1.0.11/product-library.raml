@@ -1,0 +1,52 @@
+#%RAML 1.0 Library
+uses: 
+  modifiedBy: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/modified-by-library/1.0.3/modified-by-library.raml
+  collection: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/collection-library/1.0.27/collection-library.raml
+  currency: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/currency-library/1.0.1/currency-library.raml
+  links: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/hypermedia-library/1.0.4/hypermedia-library.raml
+
+types:
+  Product:
+    properties:
+      sourceSystem?: string
+      id?: string
+      name: string
+      description?: string
+      productNumber?: string
+      manufacturing:
+        properties: 
+          manufactured?: boolean
+          daysToManufacture?: number
+      pricing?:
+        properties: 
+          listPrice?: 
+            type: number
+          costOfGoodsSold?: number
+          maxDiscountPct?: number
+      characteristics?:
+        properties: 
+          colors?: string[]
+          categories?: string[]
+          images?: links.Link[]
+      packaging?:
+        properties: 
+          size?: string
+          sizeUnitMeasureCode?: string
+          weightUnitMeasureCode?: string
+          weight?: number
+      modifiedDate?: modifiedBy.modified
+      createdDate?: modifiedBy.modified
+      link?: links.Link
+    example: !include examples/member.raml
+  
+  ProductCollection:
+    type:  Product[]
+    example: !include examples/collection.raml
+
+  ProductCollectionResponse:
+    type: collection.CollectionResponse
+    properties:
+      products: 
+        type: Product[]
+        required: false
+    example: !include examples/collectionResponse.raml

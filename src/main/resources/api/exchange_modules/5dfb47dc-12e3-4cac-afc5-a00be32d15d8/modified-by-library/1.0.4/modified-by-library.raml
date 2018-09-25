@@ -1,0 +1,12 @@
+#%RAML 1.0 Library
+uses: 
+  email: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/email-library/1.0.2/email-library.raml
+
+types:
+  modified:
+    properties: 
+      byEmail?:
+        type: email.email
+      onDateTime?:
+        type: datetime
+        example: "2018-07-01T12:10:11Z"
