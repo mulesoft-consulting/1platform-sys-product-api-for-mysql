@@ -49,8 +49,6 @@ target/
 .mule/**/*
 .DS_Store
 velocity.log
-<<<<<<< HEAD
-=======
 
 #------------------ #
 # IntelliJ-specific #
@@ -58,4 +56,3 @@ velocity.log
 .idea
 *.iml
 out
->>>>>>> develop
