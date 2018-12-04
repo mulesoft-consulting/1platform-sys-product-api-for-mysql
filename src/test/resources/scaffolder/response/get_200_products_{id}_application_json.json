@@ -1,0 +1,40 @@
+{
+    "characteristics": {
+        "images": [
+            {
+                "href": "https://www.ntoretail.cloud/on/demandware.static/-/Sites-nto/default/dw1237be41/images/hi-res/1806100.jpg"
+            }
+        ],
+        "categories": [
+            "Mens"
+        ],
+        "colors": [
+            ""
+        ]
+    },
+    "createdDate": {
+        "onDateTime": "2018-08-30T00:00:00"
+    },
+    "name": "MEN'S SINGLE-TRACK II",
+    "manufacturing": {
+        "daysToManufacture": 0,
+        "manufactured": true
+    },
+    "modifiedDate": {
+        "onDateTime": ""
+    },
+    "description": "Bag some peaks in these lightweight running shoes. They offer protection thanks to Snake Plate technology, which reduces stone bruising while retaining the shoes' flexibility. Providing stability, these shoes are engineered for an improved midfoot fit. A ",
+    "packaging": {
+        "weightUnitMeasureCode": null,
+        "size": null,
+        "weight": null,
+        "sizeUnitMeasureCode": null
+    },
+    "id": "1806100",
+    "productNumber": "1806100",
+    "pricing": {
+        "costOfGoodsSold": 110,
+        "maxDiscountPct": 0,
+        "listPrice": 88
+    }
+}

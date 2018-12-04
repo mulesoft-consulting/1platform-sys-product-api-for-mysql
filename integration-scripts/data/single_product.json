@@ -1,0 +1,42 @@
+{
+  "characteristics": {
+    "images": [
+      {
+        "href": "https://cdn.technologyadvice.com/wp-content/uploads/2017/03/Salesforce-Swag.png"
+      }
+    ],
+    "categories": [
+      "Events"
+    ],
+    "colors": [
+      "RED",
+      "BLUE"
+    ]
+  },
+  "sourceSystem": "SAP",
+  "createdDate": {
+    "onDateTime": "2018-09-06T00:00:00"
+  },
+  "name": "Functionality - TEST",
+  "manufacturing": {
+    "daysToManufacture": 0,
+    "manufactured": false
+  },
+  "modifiedDate": {
+    "onDateTime": ""
+  },
+  "description": "This is a product created from the API Functional Test",
+  "packaging": {
+    "weightUnitMeasureCode": "30",
+    "size": "80",
+    "weight": 34.5,
+    "sizeUnitMeasureCode": "10"
+  },
+  "id": "TEST-A",
+  "productNumber": "TEST-A",
+  "pricing": {
+    "costOfGoodsSold": 100,
+    "maxDiscountPct": 0,
+    "listPrice": 100
+  }
+}

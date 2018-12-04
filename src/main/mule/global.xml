@@ -23,7 +23,7 @@ http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/m
     </http:listener-config>
     <apikit:config name="product-api-for-mysql-db-config" raml="product-api-for-mysql-db.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <db:config name="Database_Config" doc:name="Database Config" doc:id="234c7d5c-c4b9-4149-bfe6-7977b9566163" >
-		<db:my-sql-connection host="${mysql.host}" port="${mysql.port}" user="${mysql.user}" password="${mysql.password}" database="${mysql.schema}" />
+		<db:generic-connection driverClassName="${db.className}" url="${db.url}"/>
 	</db:config>
 	<api-gateway:autodiscovery apiId="${api.autodiscovery}" doc:name="API Autodiscovery" doc:id="67de72ef-4ca5-46ff-b1dd-66e86cf0305f" flowRef="product-api-for-mysql-db-main" />
 </mule>

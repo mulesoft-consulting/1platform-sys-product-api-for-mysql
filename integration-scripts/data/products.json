@@ -1,0 +1,90 @@
+[
+  {
+    "characteristics": {
+      "images": [
+        {
+          "href": "https://localhost/Salesforce-Swag.png"
+        }
+      ],
+      "categories": [
+        "Events"
+      ],
+      "colors": [
+        ""
+      ]
+    },
+    "sourceSystem": "funciontal API",
+    "createdDate": {
+      "onDateTime": "2018-09-06T00:00:00"
+    },
+    "name": "Corporate swag kit - platinum",
+    "manufacturing": {
+      "daysToManufacture": 0,
+      "manufactured": false
+    },
+    "modifiedDate": {
+      "onDateTime": ""
+    },
+    "description": "Corporate swag kit at the platinum level",
+    "packaging": {
+      "weightUnitMeasureCode": "",
+      "size": "S",
+      "weight": 0.0,
+      "sizeUnitMeasureCode": "3"
+    },
+    "id": "TEST_POST",
+    "productNumber": "TST_POST",
+    "pricing": {
+      "costOfGoodsSold": 100,
+      "maxDiscountPct": 0,
+      "listPrice": 100
+    }
+  },
+  {
+    "characteristics": {
+      "images": [
+        {
+          "href": "https://localhost/images/hi-res/1004100-black.jpg"
+        },
+        {
+          "href": "https://localhost/images/large/1004100-black-interior.jpg"
+        },
+        {
+          "href": "https://localhost/images/large/1004100-black-side.jpg"
+        }
+      ],
+      "categories": [
+        "Mens",
+        "Jackets"
+      ],
+      "colors": [
+        "black",
+        "blue",
+        "gray"
+      ]
+    },
+    "sourceSystem": "mysql",
+    "createdDate": {
+      "onDateTime": "2018-08-30T00:00:00"
+    },
+    "name": "MENS THUNDER JACKET",
+    "manufacturing": {
+      "daysToManufacture": 0,
+      "manufactured": true
+    },
+    "description": "The ultimate, ultra-lightweight, high-power down jacket for outdoor athletes to sport in cold conditions, this highly-compressible coat is a classic mid-layer or outer jacket for the cold season. Constructed from a durable nylon ripstop exterior treated w",
+    "packaging": {
+      "weightUnitMeasureCode": "",
+      "size": "S",
+      "weight": 0.0,
+      "sizeUnitMeasureCode": "3"
+    },
+    "id": "1004100-1",
+    "productNumber": "1004100",
+    "pricing": {
+      "costOfGoodsSold": 249,
+      "maxDiscountPct": 20,
+      "listPrice": 199.2
+    }
+  }
+]

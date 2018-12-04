@@ -10,16 +10,16 @@ securitySchemes:
 description: Exposes Products from the MySQL Database
 
 uses: 
-  product: /exchange_modules/4ff02cd7-9e08-481b-890b-15ff7467b894/product-library/1.0.11/product-library.raml
-  collectionRT: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/collection-library/1.0.27/collection-library.raml
+  product: /exchange_modules/4ff02cd7-9e08-481b-890b-15ff7467b894/product-library/1.0.16/product-library.raml
+  collectionRT: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/collection-library/1.0.32/collection-library.raml
 
 /products:
   displayName: Products
   type:  
     collectionRT.collection:
       mediaType: application/json
-      collectionExample: !include exchange_modules/4ff02cd7-9e08-481b-890b-15ff7467b894/product-library/1.0.11/examples/collection.raml
-      collectionResponseExample: !include exchange_modules/4ff02cd7-9e08-481b-890b-15ff7467b894/product-library/1.0.11/examples/collectionResponse.raml
+      collectionExample: !include exchange_modules/4ff02cd7-9e08-481b-890b-15ff7467b894/product-library/1.0.16/examples/collection.raml
+      collectionResponseExample: !include exchange_modules/4ff02cd7-9e08-481b-890b-15ff7467b894/product-library/1.0.16/examples/collectionResponse.raml
   get:
     description: Retrieve all the Products.
     queryParameters: 
@@ -39,7 +39,7 @@ uses:
     type: 
       collectionRT.member:
         mediaType: application/json
-        memberExample: !include exchange_modules/4ff02cd7-9e08-481b-890b-15ff7467b894/product-library/1.0.11/examples/member.raml
+        memberExample: !include exchange_modules/4ff02cd7-9e08-481b-890b-15ff7467b894/product-library/1.0.16/examples/member.raml
     uriParameters: 
       id:
         example: "1"

@@ -1,0 +1,24 @@
+suite:
+  name: "Hello World Suite"
+files:
+  - file: tests/HelloWorld.dwl
+    file: tests/SysProductApiForMysql.dwl
+reporters:
+    - type: HTML
+      outFile: /tmp/HTML.html
+  # - type: SumoLogic
+  #   options:
+  #     SUMO_ENDPOINT: <sumo_source>
+  # - type: PagerDuty
+  #   options:
+  #     PAGER_DUTY_ROUTING_KEY: <routing_key>
+  # - type: Slack
+  #   options:
+  #     SLACK_WEBHOOK: <webhook_url>
+  # - type: NewRelic
+  #   options:
+  #     NEW_RELIC_LICENSE_KEY: <license_key>
+  # - type: JSON
+  #   outFile: /tmp/JSON.json
+  # - type: JUnit
+  #   outFile: /tmp/JUnit.xml

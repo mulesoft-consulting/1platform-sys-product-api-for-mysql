@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
     <flow name="product-api-for-mysql-db-main">
         <http:listener config-ref="product-api-for-mysql-db-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
-                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:response>
             <http:error-response statusCode="#[vars.httpStatus default 500]">
-                <http:body>#[payload]</http:body>
-                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+                <http:body><![CDATA[#[payload]]]></http:body>
             </http:error-response>
         </http:listener>
         <apikit:router config-ref="product-api-for-mysql-db-config" />
@@ -27,7 +26,7 @@ output application/json
                     </ee:variables>
                 </ee:transform>
             </on-error-propagate>
-            <on-error-propagate type="APIKIT:NOT_FOUND">
+            <on-error-propagate type="APIKIT:NOT_FOUND, APP:NOT_FOUND" enableNotifications="true" logException="true">
                 <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
                     <ee:message>
                         <ee:set-payload><![CDATA[%dw 2.0
@@ -122,184 +121,67 @@ output application/json
         </error-handler>
     </flow>
     <flow name="put:\products\(id):application\json:product-api-for-mysql-db-config">
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" doc:id="ca0c444a-99ee-4433-a6a8-69a827d8b9aa">
-            <ee:variables>
-                <ee:set-variable variableName="id"><![CDATA[attributes.uriParams.id]]></ee:set-variable>
-            </ee:variables>
-        </ee:transform>
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="f7c0ee2b-1603-4ebb-a080-afa8b64c7784">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
+        <flow-ref doc:name="selectByID" doc:id="5838f07e-8ae1-425f-bd37-cb723074f0b3" name="selectByID" target="product" targetValue="#[payload[0]]"/>
+		<try doc:name="Try" doc:id="791a0fc4-1813-43ee-9497-089f5cf32b93" >
+			<db:update doc:name="Update" doc:id="a449b65d-01eb-4edd-8147-d4c95a92beca" config-ref="Database_Config">
+			<db:sql>UPDATE products set name=:name, description=:description, product_number=:productNumber, manufactured=:manufactured, days_to_manufacture=:daysToManufacture, list_price=:listPrice,
+standard_cost=:standardCost, max_discount=:maxDiscount, colors=:colors, categories=:categories, images=:images, size=:size, size_unit_measure_code=:sizeUnitMeasureCode,  
+weight_unit_measure_code=:weightUnitMeasureCode, weight=:weight, modified_date=CURDATE(), changed=true where id=:id</db:sql>
+			<db:input-parameters><![CDATA[#[{
+	name: payload.name, 
+	description: payload.description, 
+	productNumber: payload.productNumber, 
+	manufactured: payload.manufacturing.manufactured, 
+	daysToManufacture: payload.manufacturing.daysToManufacture,
+	listPrice: payload.pricing.listPrice, 
+	standardCost: payload.pricing.costOfGoodsSold, 
+	maxDiscount: payload.pricing.maxDiscountPct, 
+	colors: payload.characteristics.colors default [] joinBy ",",
+	categories: payload.characteristics.categories default [] joinBy ",", 
+	images: payload.characteristics.images.href default [] joinBy ",", 
+	size: payload.packaging.size, 
+	sizeUnitMeasureCode: payload.packaging.sizeUnitMeasureCode,
+	weightUnitMeasureCode: payload.packaging.weightUnitMeasureCode, 
+	weight: payload.packaging.weight, 
+	id: vars.product.id
+}]]]></db:input-parameters>
+		</db:update>
+			<error-handler >
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="67f5a031-adc3-4aee-9cdc-f10ba0bf7d9f" >
+					<logger level="INFO" doc:name="Logger" doc:id="5f143129-6d23-4625-86f0-3820ed9f6d14" message="#['Error: ' ++ error.description]"/>
+					<ee:transform doc:name="Transform Message" doc:id="9879c5b8-9721-4a32-8b51-a44a723a0aa5" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
 ---
 {
-  meta: {
-    messages: [
-      {
-        severity: "INFO",
-        code: "200",
-        description: "OK",
-        link: {
-          href: "http://localhost",
-          title: "All good!"
-        }
-      }
-    ],
-    totalItems: 3,
-    pagingOffset: 1,
-    pagingLimit: 15
-  },
-  links: {
-    self: {
-      href: "http://localhost/currentPage",
-      title: "Current page"
-    },
-    first: {
-      href: "http://localhost/firstPage",
-      title: "First Page"
-    },
-    prev: {
-      href: "http://localhost/previousPage",
-      title: "Previous page"
-    },
-    next: {
-      href: "http://localhost/nextPage",
-      title: "Next Page"
-    },
-    last: {
-      href: "http://localhost/lastPage",
-      title: "Last Page"
-    }
-  },
-  messages: [
-    {
-      itemId: "2222222",
-      severity: "INFO",
-      code: "201",
-      description: "product record created"
-    }, 
-    {
-      itemId: "3333333",
-      severity: "INFO",
-      code: "202",
-      description: "Create product request accepted"
-    }, 
-    {
-      itemId: "111111",
-      severity: "INFO",
-      code: "409",
-      description: "Duplicate product record exists"
-    }
-  ]
+	severity: "ERROR",
+	code: "409",
+	message: error.description
 }]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+						</ee:message>
+						<ee:variables >
+							<ee:set-variable variableName="httpStatus" ><![CDATA[409]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+				</on-error-continue>
+			</error-handler>
+		</try>
     </flow>
     <flow name="delete:\products\(id):product-api-for-mysql-db-config">
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core">
-            <ee:variables>
-                <ee:set-variable variableName="id">attributes.uriParams.id</ee:set-variable>
-            </ee:variables>
-        </ee:transform>
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="f1d98ab6-5141-4935-969f-ee2d30842000">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  meta: {
-    messages: [
-      {
-        severity: "INFO",
-        code: "200",
-        description: "OK",
-        link: {
-          href: "http://localhost",
-          title: "All good!"
-        }
-      }
-    ],
-    totalItems: 3,
-    pagingOffset: 1,
-    pagingLimit: 15
-  },
-  links: {
-    self: {
-      href: "http://localhost/currentPage",
-      title: "Current page"
-    },
-    first: {
-      href: "http://localhost/firstPage",
-      title: "First Page"
-    },
-    prev: {
-      href: "http://localhost/previousPage",
-      title: "Previous page"
-    },
-    next: {
-      href: "http://localhost/nextPage",
-      title: "Next Page"
-    },
-    last: {
-      href: "http://localhost/lastPage",
-      title: "Last Page"
-    }
-  },
-  messages: [
-    {
-      itemId: "2222222",
-      severity: "INFO",
-      code: "201",
-      description: "product record created"
-    }, 
-    {
-      itemId: "3333333",
-      severity: "INFO",
-      code: "202",
-      description: "Create product request accepted"
-    }, 
-    {
-      itemId: "111111",
-      severity: "INFO",
-      code: "409",
-      description: "Duplicate product record exists"
-    }
-  ]
-}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<flow-ref doc:name="selectByID" doc:id="bb1167a4-3487-4deb-93c0-7a9f7c55b05f" name="selectByID"/>
+		<db:delete doc:name="Delete" doc:id="3d54c141-0edb-4dc2-a78c-94f276623fb5" config-ref="Database_Config">
+			<db:sql>delete from products where id = :id</db:sql>
+			<db:input-parameters><![CDATA[#[
+	{
+		id: payload[0].id
+	}
+]]]></db:input-parameters>
+		</db:delete>
     </flow>
     <flow name="get:\products\(id):product-api-for-mysql-db-config">
-        <db:select doc:name="Select" doc:id="b3b2c24c-5b44-4219-a659-9a4e8901f75a" config-ref="Database_Config">
-			<db:sql >SELECT
-p.id, 
-p.name, 
-p.description, 
-p.product_number, 
-p.manufactured, 
-p.days_to_manufacture, 
-p.list_price, 
-p.standard_cost, 
-p.max_discount, 
-p.colors, 
-p.categories, 
-p.images, 
-p.size, 
-p.size_unit_measure_code, 
-p.weight_unit_measure_code, 
-p.weight, 
-p.modified_date, 
-p.created_date
-FROM products p
-WHERE
-p.id = :number</db:sql>
-			<db:input-parameters ><![CDATA[#[{
-	'number' : message.attributes.uriParams.id
-}]]]></db:input-parameters>
-		</db:select>
-		<choice doc:name="Choice" doc:id="21c8af0d-ce07-4c36-80a6-16e2066d4758" >
-			<when expression="#[sizeOf(payload) &gt; 0]" >
-				<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="c4e53f20-027b-4aa6-a909-2d47bc42db41">
+		<flow-ref doc:name="selectByID" doc:id="6e466688-3b19-4962-96ed-ef98edd6b432" name="selectByID"/>
+		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="c4e53f20-027b-4aa6-a909-2d47bc42db41">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -341,14 +223,40 @@ var product = payload[0]
 }]]></ee:set-payload>
             </ee:message>
         </ee:transform>
-			</when>
-			<otherwise >
-				<set-variable value="404" doc:name="Set Variable" doc:id="f08a1fdd-d184-401b-adf0-6f859b3d48cf" variableName="httpStatus"/>
-				<set-payload value='{  "message": "Product not found" }' doc:name="Set Payload" doc:id="2496a1ca-07da-4193-8013-f990bba9f68f" />
-			</otherwise>
-		</choice>
     </flow>
-    <flow name="get:\products:product-api-for-mysql-db-config">
+    <flow name="selectByID" doc:id="a6c527cb-b8be-457d-9f40-328893d42f46" >
+		<db:select doc:name="Select" doc:id="b3b2c24c-5b44-4219-a659-9a4e8901f75a" config-ref="Database_Config">
+			<db:sql>SELECT
+p.id, 
+p.name, 
+p.description, 
+p.product_number, 
+p.manufactured, 
+p.days_to_manufacture, 
+p.list_price, 
+p.standard_cost, 
+p.max_discount, 
+p.colors, 
+p.categories, 
+p.images, 
+p.size, 
+p.size_unit_measure_code, 
+p.weight_unit_measure_code, 
+p.weight, 
+p.modified_date, 
+p.created_date
+FROM products p
+WHERE
+p.id = :number</db:sql>
+			<db:input-parameters><![CDATA[#[{
+	'number' : message.attributes.uriParams.id
+}]]]></db:input-parameters>
+		</db:select>
+		<validation:is-true doc:name="Is true" doc:id="1a688f20-af0a-4400-890d-2c6a955b8d94" expression="#[sizeOf(payload) &gt; 0]">
+			<error-mapping sourceType="VALIDATION:INVALID_BOOLEAN" targetType="APP:NOT_FOUND" />
+		</validation:is-true>
+	</flow>
+	<flow name="get:\products:product-api-for-mysql-db-config">
 		<ee:transform doc:name="Transform Message" doc:id="808eb524-c48b-4808-81fc-ac0b563187a4" >
 			<ee:message >
 			</ee:message>
@@ -360,10 +268,19 @@ output application/java
 	category: message.attributes.queryParams.category as String default "",
 	productName: message.attributes.queryParams.productName as String default ""
 }]]></ee:set-variable>
+				<ee:set-variable variableName="pagination" ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	offset: attributes.queryParams.pagingOffset default 0,
+	limit: attributes.queryParams.maxResults default 10
+}]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
-		<db:select doc:name="Select" doc:id="e2b4d4b1-490e-4886-b7e3-ed894fa872e6" config-ref="Database_Config">
-			<db:sql >SELECT
+		<scatter-gather doc:name="Scatter-Gather" doc:id="5334bfc0-124a-4206-a95d-6206a89353ed" >
+			<route >
+				<db:select doc:name="Execute Query" doc:id="e2b4d4b1-490e-4886-b7e3-ed894fa872e6" config-ref="Database_Config" maxRows="#[(vars.pagination.offset + 1) * vars.pagination.limit]">
+			<db:sql>SELECT
 p.id, 
 p.name, 
 p.description, 
@@ -385,18 +302,45 @@ p.created_date
 FROM products p
 WHERE
 p.name LIKE CONCAT( '%', :name , '%' ) AND p.categories LIKE CONCAT( '%' , :categories , '%')</db:sql>
-			<db:input-parameters ><![CDATA[#[{
+			<db:input-parameters><![CDATA[#[{
+	'name' : vars.productFilters.productName,
+	'categories' : vars.productFilters.category,
+    'offset': attributes.queryParams.pagingOffset,
+    'maxResults': attributes.queryParams.maxResults
+}]]]></db:input-parameters>
+		</db:select>
+			</route>
+			<route >
+				<db:select doc:name="Count Total" doc:id="e8910156-1c74-4274-a005-8ed6e58b33f0" config-ref="Database_Config" target="total">
+					<db:sql >SELECT count(p.id) as total from products p
+WHERE
+p.name LIKE CONCAT( '%', :name , '%' ) AND p.categories LIKE CONCAT( '%' , :categories , '%')
+</db:sql>
+					<db:input-parameters ><![CDATA[#[{
 	'name' : vars.productFilters.productName,
 	'categories' : vars.productFilters.category
 }]]]></db:input-parameters>
-		</db:select>
+				</db:select>
+			</route>
+		</scatter-gather>
 		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="f436d6a7-730c-4be0-84ef-e392c0884c21">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
+var result = payload[0].payload
+var size = sizeOf(result)
+var start = (vars.pagination.offset * vars.pagination.limit)
+var tmpend = ((vars.pagination.offset + 1) * vars.pagination.limit) - 1
+var end = if(size > tmpend) tmpend else size - 1
+var subProducts = if(size > 0) result[start to end] else []
 ---
 {
-	products: payload map ( payload01 , indexOfPayload01 ) -> {
+	meta: {
+		totalItems: vars.total[0].total,
+		pagingOffset: vars.pagination.offset,
+		pagingLimit: vars.pagination.limit
+	},
+	products: subProducts map ( payload01 , indexOfPayload01 ) -> {
 		characteristics: {
 			images: ((payload01.images as String default "") splitBy(",")) map ((imgUrl, index) -> {
 				href: imgUrl
@@ -436,26 +380,83 @@ output application/json
         </ee:transform>
     </flow>
     <flow name="post:\products:application\json:product-api-for-mysql-db-config">
-        <ee:transform doc:name="Transform Message" doc:id="fcf3fc2a-5bf1-4feb-b6ee-09ea8c012750" >
+		<ee:transform doc:name="Transform Message" doc:id="a7286f9f-b218-401f-944d-94e8fe97db29" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/java
 ---
-payload map ( payload01 , indexOfPayload01 ) -> {
-	description: payload01.description,
-	name: payload01.name,
-	id: payload01.id,
-	images: payload01.characteristics.images.href joinBy(","),
-	max_discount: payload01.pricing.maxDiscountPct
+payload map (product, index) -> {
+	id: product.id,
+	name: product.name,
+	description: product.description,
+	productNumber: product.productNumber,
+	manufactured: product.manufacturing.manufactured,
+	daysToManufacture: product.manufacturing.daysToManufacture,
+	listPrice: product.pricing.listPrice,
+	standardCost: product.pricing.costOfGoodsSold,
+	maxDiscount: product.pricing.maxDiscountPct,
+	colors: product.characteristics.color default [] joinBy ",",
+	categories: product.characteristics.categories default [] joinBy ",",
+	images: product.characteristics.images.href default [] joinBy ",",
+	size: product.packaging.size,
+	sizeUnitMeasureCode: product.packaging.sizeUnitMeasureCode,
+	weightUnitMeasureCode: product.packaging.itemSequenceInfo,
+	weight: product.packaging.weight	
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<db:bulk-insert doc:name="Bulk insert" doc:id="80d9d386-098a-4cc8-91b6-1530d179d4aa" config-ref="Database_Config">
-			<db:sql >INSERT INTO Products ( id, name, description, product_number, manufactured, days_to_manufacture, list_price, standard_cost, max_discount, colors, categories, images, size, size_unit_measure_code, weight_unit_measure_code, weight, modified_date, created_date )
-VALUES ( 
-	:id, :name, :description, :product_number, :manufactured, :days_to_manufacture, :list_price, :standard_cost, :max_discount, :colors, :categories, :images, :size,  :size_unit_measure_code, :weight_unit_measure_code, :weight, :modified_date, :created_date
- )</db:sql>
-		</db:bulk-insert>
+		<set-variable value='[]' doc:name="Set Variable" doc:id="391d4a49-b185-42f4-a05b-1161c74a1804" variableName="responses" mimeType="application/json"/>
+		 <foreach doc:name="For Each" doc:id="c09d6e25-2894-446b-b320-00f39b8eb1c7" >
+			<set-variable value="#[payload.id]" doc:name="Save Product Number" doc:id="d0bce08e-e1c6-4ae5-af00-c897c4b45efb" variableName="id" />
+			<try doc:name="Try" doc:id="da666e47-9688-41bd-b658-16a237d11601" transactionalAction="ALWAYS_BEGIN">
+				<db:insert doc:name="Insert" doc:id="09de905e-a874-4a7e-a593-bf3df971cb8b" config-ref="Database_Config">
+					<db:sql >insert into products(id, name, description, product_number, manufactured, days_to_manufacture, list_price, standard_cost, max_discount, colors, categories, images, size, size_unit_measure_code, weight_unit_measure_code, weight, created_date)
+values(:id, :name, :description, :productNumber, :manufactured, :daysToManufacture, :listPrice, :standardCost, :maxDiscount, :colors, :categories, :images, :size, :sizeUnitMeasureCode, :weightUnitMeasureCode, :weight, CURDATE())</db:sql>
+					<db:input-parameters ><![CDATA[#[payload]]]></db:input-parameters>
+				</db:insert>
+				<ee:transform doc:name="Transform Message" doc:id="7f7392f5-7195-45a1-bc15-f233ccd68511" >
+				<ee:message >
+				</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="responses" ><![CDATA[%dw 2.0
+output application/java
+---
+vars.responses ++ 
+[
+	{
+		itemId: vars.id default -1,
+	    severity: "INFO",
+      	code: "201",
+      	description: "product record created"
+	}
+]]]></ee:set-variable>
+					</ee:variables>
+			</ee:transform>
+			<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="752ceb0a-4193-446b-8dd1-70e7d31d15cc" >
+						<ee:transform doc:name="Transform Message" doc:id="d7a34413-d5ec-4ef5-9671-36dae14c3f3f" >
+							<ee:message >
+							</ee:message>
+							<ee:variables >
+								<ee:set-variable variableName="responses" ><![CDATA[%dw 2.0
+output application/java
+---
+vars.responses ++ 
+[
+	{
+		itemId: payload.id default -1,
+	    severity: "ERROR",
+      	code: "409",
+      	description: error.description
+		
+	}
+]]]></ee:set-variable>
+							</ee:variables>
+						</ee:transform>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		 </foreach>
 		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="1454da9e-390b-4e2b-86fb-5aece1359d94">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
@@ -463,63 +464,11 @@ output application/json
 ---
 {
   meta: {
-    messages: [
-      {
-        severity: "INFO",
-        code: "200",
-        description: "OK",
-        link: {
-          href: "http://localhost",
-          title: "All good!"
-        }
-      }
-    ],
-    totalItems: 3,
-    pagingOffset: 1,
-    pagingLimit: 15
+    totalItems: sizeOf(vars.responses),
+    pagingOffset: 0,
+    pagingLimit: sizeOf(vars.responses),
   },
-  links: {
-    self: {
-      href: "http://localhost/currentPage",
-      title: "Current page"
-    },
-    first: {
-      href: "http://localhost/firstPage",
-      title: "First Page"
-    },
-    prev: {
-      href: "http://localhost/previousPage",
-      title: "Previous page"
-    },
-    next: {
-      href: "http://localhost/nextPage",
-      title: "Next Page"
-    },
-    last: {
-      href: "http://localhost/lastPage",
-      title: "Last Page"
-    }
-  },
-  messages: [
-    {
-      itemId: "2222222",
-      severity: "INFO",
-      code: "201",
-      description: "product record created"
-    }, 
-    {
-      itemId: "3333333",
-      severity: "INFO",
-      code: "202",
-      description: "Create product request accepted"
-    }, 
-    {
-      itemId: "111111",
-      severity: "INFO",
-      code: "409",
-      description: "Duplicate product record exists"
-    }
-  ]
+  messages: vars.responses
 }]]></ee:set-payload>
             </ee:message>
         </ee:transform>

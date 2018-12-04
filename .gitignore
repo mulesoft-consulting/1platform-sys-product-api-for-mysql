@@ -26,6 +26,8 @@ local.properties
 .project
 .classpath
 *.yaml
+*.jks
+!bat.yaml
 
 # External tool builders
 .externalToolBuilders/
@@ -47,3 +49,13 @@ target/
 .mule/**/*
 .DS_Store
 velocity.log
+<<<<<<< HEAD
+=======
+
+#------------------ #
+# IntelliJ-specific #
+# ----------------- #
+.idea
+*.iml
+out
+>>>>>>> develop

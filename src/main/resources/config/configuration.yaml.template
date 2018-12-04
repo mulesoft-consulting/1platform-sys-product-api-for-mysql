@@ -3,21 +3,12 @@ https:
 
 keystore:
   path: 
-  password: 
-
-mysql:
-  host: 
-  port: 
-  user:
-  password:
-  schema: 
+  password:  
 
 api:
   autodiscovery: 
   
-anypoint:
-  platform:
-    client_id: 
-    client_secret: 
-    visualizer:
-      layer:
+db:
+  className:
+  url:
+  
