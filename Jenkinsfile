@@ -1,6 +1,6 @@
 pipeline {
   agent {
-    label 'mule-builder'
+    label 'bat-builder'
   }
   environment {
     DEPLOY_CREDS = credentials('deploy-anypoint-user')
@@ -79,6 +79,15 @@ pipeline {
                         reportDir: 'target/site/munit/coverage',
                         reportFiles: 'summary.html',
                         reportName: "Code coverage"
+                    ])
+       
+        publishHTML (target: [
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: false,
+                        keepAll: true,
+                        reportDir: '/tmp',
+                        reportFiles: 'HTML.html',
+                        reportName: "Integration Test"
                     ])
        step([$class: 'hudson.plugins.chucknorris.CordellWalkerRecorder'])
       }
