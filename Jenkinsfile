@@ -62,6 +62,12 @@ pipeline {
           sh 'mvn -V -B -DskipTests deploy -DmuleDeploy -Dmule.version=$MULE_VERSION -Danypoint.username=$DEPLOY_CREDS_USR -Danypoint.password=$DEPLOY_CREDS_PSW -Dcloudhub.app=$APP_NAME -Dcloudhub.environment=$ENVIRONMENT -Denv.ANYPOINT_CLIENT_ID=$ANYPOINT_ENV_USR -Denv.ANYPOINT_CLIENT_SECRET=$ANYPOINT_ENV_PSW -Dcloudhub.bg=$BG -Dcloudhub.worker=$WORKER -Ddb.url=$DB_JDBC'
         }
     }
+    stage('Integration Test') {
+      steps {
+        sh 'cd integration-test'
+        sh 'bat --config=devx'
+      }
+    }
   }
 
   post {
