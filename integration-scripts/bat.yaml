@@ -1,12 +1,10 @@
 suite:
   name: "System Product API For MySQL"
 files:
-  - file: tests/HelloWorld.dwl
   - file: tests/SysProductApiForMysql.dwl
 reporters:
     - type: HTML
       outFile: /tmp/HTML.html
-
   # - type: SumoLogic
   #   options:
   #     SUMO_ENDPOINT: <sumo_source>
