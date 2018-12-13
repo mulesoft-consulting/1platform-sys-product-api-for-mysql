@@ -64,8 +64,9 @@ pipeline {
     }
     stage('Integration Test') {
       steps {
-        sh 'cd integration-test'
-        sh 'bat --config=devx'
+        dir('integration-test') {
+            sh 'bat --config=devx'
+        }
       }
     }
   }
