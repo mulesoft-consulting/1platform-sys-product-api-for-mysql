@@ -75,19 +75,10 @@ pipeline {
                         allowMissing: false,
                         alwaysLinkToLastBuild: false,
                         keepAll: true,
-                        reportDir: 'target/site/munit/coverage',
-                        reportFiles: 'summary.html',
+                        reportDir: 'target/site/munit/coverage,/tmp',
+                        reportFiles: 'summary.html, HTML.html',
                         reportName: "Code coverage"
-                    ])
-       
-        publishHTML (target: [
-                        allowMissing: false,
-                        alwaysLinkToLastBuild: false,
-                        keepAll: true,
-                        reportDir: '/tmp',
-                        reportFiles: 'HTML.html',
-                        reportName: "Integration Test",
-                        includes: "**/HTML.html"
+                        includes: "**/*.html"
                     ])
        step([$class: 'hudson.plugins.chucknorris.CordellWalkerRecorder'])
       }
