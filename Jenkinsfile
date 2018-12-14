@@ -89,7 +89,7 @@ pipeline {
                         reportDir: '/tmp',
                         reportFiles: 'HTML.html',
                         reportName: "Integration Test",
-                        includeFiles: "**/HTML.html"
+                        includes: "**/HTML.html"
                     ])
        step([$class: 'hudson.plugins.chucknorris.CordellWalkerRecorder'])
       }
