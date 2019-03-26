@@ -74,15 +74,15 @@ pipeline {
 
   post {
       always {
-        publishHTML (target: [
-                        allowMissing: false,
-                        alwaysLinkToLastBuild: false,
-                        keepAll: true,
-                        reportDir: 'target/site/munit/coverage,/tmp',
-                        reportFiles: 'summary.html, HTML.html',
-                        reportName: "Code coverage"
-                        includes: "**/*.html"
-                    ])
+        // publishHTML (target: [
+        //                 allowMissing: false,
+        //                 alwaysLinkToLastBuild: false,
+        //                 keepAll: true,
+        //                 reportDir: 'target/site/munit/coverage,/tmp',
+        //                 reportFiles: 'summary.html, HTML.html',
+        //                 reportName: "Code coverage"
+        //                 includes: "**/*.html"
+        //             ])
        step([$class: 'hudson.plugins.chucknorris.CordellWalkerRecorder'])
       }
   }
