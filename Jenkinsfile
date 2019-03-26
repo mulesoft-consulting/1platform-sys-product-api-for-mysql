@@ -1,10 +1,12 @@
 pipeline {
   agent {
     label 'bat-builder'
-      parameters {
-  	    string (defaultValue: '4.1.5', description: 'This is the Mule Version to be specified', name: 'MULE_VERSION', trim: false)
-      }
   }
+
+  parameters {
+    string (defaultValue: '4.1.5', description: 'This is the Mule Version to be specified', name: 'MULE_VERSION', trim: false)
+  }
+  
   environment {
     DEPLOY_CREDS = credentials('deploy-anypoint-user')
     MULE_VERSION = "${params.MULE_VERSION}"
