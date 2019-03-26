@@ -58,7 +58,7 @@ suite("Product System API - CRUD Black Box Testing") in [
         }
     assert [
         $.response.status mustEqual 201 ,
-        $.response.body.messages[0].code mustEqual "201" ,
+        $.response.body.messages[0].code == "201" ,
         $.response.body.messages[1].code mustEqual "409"
     ]
     execute [
