@@ -95,7 +95,7 @@ pipeline {
             keepAll: true,
             reportDir: '/tmp',
             reportFiles: 'HTML.html',
-            reportName: "Integration Test"
+            reportName: "Integration Test",
             includes: "**/index.html"
           ])
         }
