@@ -25,19 +25,35 @@ pipeline {
         }
       }
     }
+
     stage('Build') {
       steps {
-        sh 'mvn -B clean package -DskipTests'
+        withMaven(
+          mavenSettingsConfig: 'f007350a-b1d5-44a8-9757-07c22cd2a360'){
+            sh 'mvn -B clean package -DskipTests'
+        }
       }
     }
 
     stage('Test') {
       steps {
- withMaven(
-               mavenSettingsConfig: 'f007350a-b1d5-44a8-9757-07c22cd2a360'){
-                    sh 'mvn -B test -Ddb.className=org.h2.Driver -Ddb.url=jdbc:h2:mem:1platform'
+        withMaven(
+          mavenSettingsConfig: 'f007350a-b1d5-44a8-9757-07c22cd2a360'){
+            sh 'mvn -B test -Ddb.className=org.h2.Driver -Ddb.url=jdbc:h2:mem:1platform'
+        }
+      }
 
-              }
+      post {
+        always {
+          publishHTML (target: [
+            allowMissing: false,
+            alwaysLinkToLastBuild: false,
+            keepAll: true,
+            reportDir: 'target/site/munit/coverage',
+            reportFiles: 'summary.html',
+            reportName: "Code coverage"
+          ])
+        }
       }
     }
 
@@ -75,12 +91,12 @@ pipeline {
         always {
           publishHTML (target: [
             allowMissing: false,
-            alwaysLinkToLastBuild: false,
+            alwaysLinkToLastBuild: true,
             keepAll: true,
-            reportDir: 'target/site/munit/coverage,/tmp',
-            reportFiles: 'summary.html, HTML.html',
-            reportName: "Code coverage"
-            includes: "**/*.html"
+            reportDir: '/tmp',
+            reportFiles: 'HTML.html',
+            reportName: "Integration Test"
+            includes: "**/index.html"
           ])
         }
       }
