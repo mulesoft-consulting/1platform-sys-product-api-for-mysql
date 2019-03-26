@@ -50,22 +50,5 @@ suite("Product System API - CRUD Black Box Testing") in [
     assert [
         $.response.status mustEqual 404
     ],
-  ],
-    GET `$(api_endpoint)/products/$(context.get('product_number'))` with header()
-    assert [
-        $.response.status mustEqual 200
-    ],
-    PUT `$(api_endpoint)/products/$(context.get('product_number'))` with {
-        headers: header().headers,
-        body: readUrl('classpath://data/single_product.json', 'application/json')
-        }
-     assert [
-        $.response.status mustEqual 204,
-    ],
-    DELETE `$(api_endpoint)/products/$(context.get('product_number'))` with header()
-    assert [
-        $.response.status mustEqual 204
-    ]
-
   ]
-]
+ ]
