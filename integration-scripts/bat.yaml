@@ -4,7 +4,7 @@ files:
   - file: tests/SysProductApiForMysql.dwl
 reporters:
     - type: HTML
-      outFile: /tmp/HTML.html
+      outFile: /tmp/index.html
   # - type: SumoLogic
   #   options:
   #     SUMO_ENDPOINT: <sumo_source>

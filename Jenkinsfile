@@ -94,7 +94,7 @@ pipeline {
             alwaysLinkToLastBuild: true,
             keepAll: true,
             reportDir: '/tmp',
-            reportFiles: 'HTML.html',
+            reportFiles: 'index.html',
             reportName: "Integration Test",
             includes: "**/index.html"
           ])
