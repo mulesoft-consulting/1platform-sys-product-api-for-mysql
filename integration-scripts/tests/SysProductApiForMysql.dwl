@@ -51,7 +51,7 @@ suite("Product System API - CRUD Black Box Testing") in [
         $.response.status mustEqual 404
     ],
   ],
-  it must 'run complete test in dev Environment' when (config.env == 'devx') in [
+  it should 'run complete test in dev Environment' when (config.env == 'devx') in [
     POST `$(api_endpoint)/products` with {
         headers: header().headers,
         body: readUrl('classpath://data/products.json', 'application/json')
