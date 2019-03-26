@@ -6,7 +6,7 @@ pipeline {
   parameters {
     string (defaultValue: '4.1.5', description: 'This is the Mule Version to be specified', name: 'MULE_VERSION', trim: false)
   }
-  
+
   environment {
     DEPLOY_CREDS = credentials('deploy-anypoint-user')
     MULE_VERSION = "${params.MULE_VERSION}"
@@ -71,24 +71,28 @@ pipeline {
       steps {
       	sh 'bat integration-scripts --config=devx'
       }
+      post {
+        always {
+          publishHTML (target: [
+            allowMissing: false,
+            alwaysLinkToLastBuild: false,
+            keepAll: true,
+            reportDir: 'target/site/munit/coverage,/tmp',
+            reportFiles: 'summary.html, HTML.html',
+            reportName: "Code coverage"
+            includes: "**/*.html"
+          ])
+        }
+      }
     }
   }
 
   post {
-      always {
-        // publishHTML (target: [
-        //                 allowMissing: false,
-        //                 alwaysLinkToLastBuild: false,
-        //                 keepAll: true,
-        //                 reportDir: 'target/site/munit/coverage,/tmp',
-        //                 reportFiles: 'summary.html, HTML.html',
-        //                 reportName: "Code coverage"
-        //                 includes: "**/*.html"
-        //             ])
-       step([$class: 'hudson.plugins.chucknorris.CordellWalkerRecorder'])
+      alwasy {
+        step([$class: 'hudson.plugins.chucknorris.CordellWalkerRecorder'])
       }
   }
-
+  
   tools {
     maven 'M3'
   }
