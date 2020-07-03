@@ -1,17 +1,17 @@
 #%RAML 1.0
 title: Product API for MySQL DB
-baseUri: http://localhost/{version}
+baseUri: https://anypoint.mulesoft.com/mocking/api/v1/links/7b2dd89a-4a24-4d54-8e49-e4fdac1cbc6f/{version} # baseUri: http://localhost/{version}
 version: v1
 mediaType: [application/json, application/xml]
-securedBy: [passthrough]
+securedBy: [x-custom]
 securitySchemes: 
-  passthrough: !include /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/pass-through-security-scheme/1.0.0/pass-through-security-scheme.raml
+  x-custom: !include /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/client-credentials-security-scheme/1.0.3/client-credentials-security-scheme.raml
 
 description: Exposes Products from the MySQL Database
 
 uses: 
   product: /exchange_modules/4ff02cd7-9e08-481b-890b-15ff7467b894/product-library/1.0.16/product-library.raml
-  collectionRT: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/collection-library/1.0.32/collection-library.raml
+  collectionRT: /exchange_modules/5dfb47dc-12e3-4cac-afc5-a00be32d15d8/collection-library/1.1.3/collection-library.raml
 
 /products:
   displayName: Products
