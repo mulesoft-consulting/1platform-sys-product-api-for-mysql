@@ -27,10 +27,12 @@
 				<extensions>true</extensions>
 				<configuration>
                     <sharedLibraries>
+                    		<!-- 
                     		<sharedLibrary>
-                            <groupId>mysql</groupId>
-                            <artifactId>mysql-connector-mxj</artifactId>
-                        </sharedLibrary>
+                            	<groupId>mysql</groupId>
+                            	<artifactId>mysql-connector-mxj</artifactId>
+                        	</sharedLibrary>
+                         -->
                     		<sharedLibrary>
                            <groupId>mysql</groupId>
                             <artifactId>mysql-connector-java</artifactId>
@@ -109,11 +111,13 @@
             <version>1.3.7</version>
             <classifier>mule-plugin</classifier>
         </dependency>
+         <!--
     	<dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-mxj</artifactId>
             <version>5.0.12</version>
         </dependency>
+        -->
     	<dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
